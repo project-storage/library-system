@@ -12,9 +12,11 @@ app.use(morgan('combined'));
 
 const memberRouter = require('./routes/memberRouter')
 const bookRouter = require('./routes/ิิbookRouter')
+const borrowBookRouter = require('./routes/borrowBookRouter')
 
-app.use('/api/libtary', memberRouter)
+app.use('/api/library', memberRouter)
 app.use('/api/library', bookRouter)
+app.use('/api/library', borrowBookRouter)
 
 // test api
 app.get('/api/libary/user-test', (req, res) => {
