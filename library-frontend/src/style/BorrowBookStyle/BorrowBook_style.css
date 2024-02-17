@@ -1,0 +1,7 @@
+.bb-table-head th {
+    border: 1px solid black;
+  }
+
+.bb-table-body td {
+    border: 1px solid black;
+  }

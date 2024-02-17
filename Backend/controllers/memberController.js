@@ -66,7 +66,52 @@ const login = async (req, res) => {
     }
 };
 
+const searchMember = async (req, res) => {
+    try {
+        const { id, m_name,m_user } = req.query
+
+        const whereClause = {}
+        if (id) {
+            whereClause.id = id
+        }
+        if (m_name) {
+            whereClause.m_name = m_name
+        }
+        if (m_user) {
+            whereClause.m_user = m_user
+        }
+
+        const member = await tb_member.findAll({
+            where: whereClause,
+        })
+
+        return res.status(200).json({ member })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'เกิดข้อผิดพลาดในการค้นหาข้อมูลหนังสือ' });
+    }
+}
+
+const allMember = async (req, res) => {
+    try {
+        // ดึงข้อมูลการยืมหนังสือทั้งหมดจากฐานข้อมูล
+        const allMember = await tb_member.findAll({
+    
+        });
+
+        return res.status(200).json({
+            status_code: 200,
+            message: "ดึงข้อมูลการยืมหนังสือทั้งหมดสำเร็จ",
+            allMember
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'เกิดข้อผิดพลาดในการดึงข้อมูลการยืมหนังสือทั้งหมด' });
+    }
+}
 module.exports = {
     createMember,
-    login
+    login,
+    searchMember,
+    allMember
 };

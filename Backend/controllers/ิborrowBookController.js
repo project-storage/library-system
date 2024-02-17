@@ -29,17 +29,20 @@ const createBorrow = async (req, res) => {
 
 const searchBorrow = async (req, res) => {
     try {
-        const { id, b_id, m_user } = req.query
+        const { b_id, m_user } = req.query;
 
-        const whereClause = {}
-        if (id) {
-            whereClause.id = id
-        }
-        if (b_id) {
-            whereClause.b_id = b_id
-        }
-        if (m_user) {
-            whereClause.m_user = m_user
+        const whereClause = {};
+
+        if (b_id && m_user) {
+            // หาการยืมโดยใช้ทั้ง b_id และ m_user
+            whereClause.b_id = b_id;
+            whereClause.m_user = m_user;
+        } else if (b_id) {
+            // หาการยืมโดยใช้เฉพาะ b_id
+            whereClause.b_id = b_id;
+        } else if (m_user) {
+            // หาการยืมโดยใช้เฉพาะ m_user
+            whereClause.m_user = m_user;
         }
 
         const borrow = await tb_borrow_book.findAll({
@@ -48,16 +51,38 @@ const searchBorrow = async (req, res) => {
                 { model: tb_book, as: 'tb_book' },
                 { model: tb_member, as: 'tb_member' }
             ]
-        })
+        });
 
-        return res.status(200).json({ borrow })
+        return res.status(200).json({ borrow });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'เกิดข้อผิดพลาดในการค้นหาข้อมูลหนังสือ' });
+    }
+};
+
+const allBorrow = async (req, res) => {
+    try {
+        // ดึงข้อมูลการยืมหนังสือทั้งหมดจากฐานข้อมูล
+        const allBorrows = await tb_borrow_book.findAll({
+            include: [
+                { model: tb_book, as: 'tb_book' },
+                { model: tb_member, as: 'tb_member' }
+            ]
+        });
+
+        return res.status(200).json({
+            status_code: 200,
+            message: "ดึงข้อมูลการยืมหนังสือทั้งหมดสำเร็จ",
+             allBorrows
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'เกิดข้อผิดพลาดในการดึงข้อมูลการยืมหนังสือทั้งหมด' });
     }
 }
 
 module.exports = {
     createBorrow,
-    searchBorrow
+    searchBorrow,
+    allBorrow
 }

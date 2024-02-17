@@ -31,6 +31,48 @@ const createBook = async (req, res) => {
     }
 };
 
+const searchBook = async (req, res) => {
+    try {
+        const { id, b_id } = req.query
+
+        const whereClause = {}
+        if (id) {
+            whereClause.id = id
+        }
+        if (b_id) {
+            whereClause.b_id = b_id
+        }
+
+        const book = await tb_book.findAll({
+            where: whereClause
+        })
+
+        return res.status(200).json({ book })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'เกิดข้อผิดพลาดในการค้นหาข้อมูลหนังสือ' });
+    }
+}
+
+const allBook = async (req, res) => {
+    try {
+        // ดึงข้อมูลการยืมหนังสือทั้งหมดจากฐานข้อมูล
+        const allBooks = await tb_book.findAll({
+
+        });
+
+        return res.status(200).json({
+            status_code: 200,
+            message: "ดึงข้อมูลการยืมหนังสือทั้งหมดสำเร็จ",
+            allBooks
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'เกิดข้อผิดพลาดในการดึงข้อมูลการยืมหนังสือทั้งหมด' });
+    }
+}
 module.exports = {
-    createBook
+    createBook,
+    searchBook,
+    allBook
 };
