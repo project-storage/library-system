@@ -33,7 +33,7 @@ const createBook = async (req, res) => {
 
 const searchBook = async (req, res) => {
     try {
-        const { id, b_id } = req.query
+        const { id, b_id, b_name, b_writer } = req.query
 
         const whereClause = {}
         if (id) {
@@ -41,6 +41,12 @@ const searchBook = async (req, res) => {
         }
         if (b_id) {
             whereClause.b_id = b_id
+        }
+        if (b_name) {
+            whereClause.b_name = b_name
+        }
+        if (b_writer) {
+            whereClause.b_writer = b_writer
         }
 
         const book = await tb_book.findAll({
