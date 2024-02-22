@@ -43,6 +43,75 @@ const createMember = async (req, res) => {
     }
 };
 
+const login = async (req, res) => {
+    try {
+        const { m_user, m_pass } = req.body;
+
+        // Find the user by m_user (assuming m_user is unique)
+        const user = await tb_member.findOne({ where: { m_user } });
+
+        // If user is not found or password is incorrect
+        if (!user || !(await bcrypt.compare(m_pass, user.m_pass))) {
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+
+        // User authentication successful, generate JWT token
+        const token = jwt.sign({ m_user, m_pass }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Return token to client
+        return res.status(200).json({ message: "Welcome", m_user, token });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+const searchMember = async (req, res) => {
+    try {
+        const { id, m_name,m_user } = req.query
+
+        const whereClause = {}
+        if (id) {
+            whereClause.id = id
+        }
+        if (m_name) {
+            whereClause.m_name = m_name
+        }
+        if (m_user) {
+            whereClause.m_user = m_user
+        }
+
+        const member = await tb_member.findAll({
+            where: whereClause,
+        })
+
+        return res.status(200).json({ member })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'เกิดข้อผิดพลาดในการค้นหาข้อมูลหนังสือ' });
+    }
+}
+
+const allMember = async (req, res) => {
+    try {
+        // ดึงข้อมูลการยืมหนังสือทั้งหมดจากฐานข้อมูล
+        const allMember = await tb_member.findAll({
+    
+        });
+
+        return res.status(200).json({
+            status_code: 200,
+            message: "ดึงข้อมูลการยืมหนังสือทั้งหมดสำเร็จ",
+            allMember
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'เกิดข้อผิดพลาดในการดึงข้อมูลการยืมหนังสือทั้งหมด' });
+    }
+}
 module.exports = {
-    createMember
+    createMember,
+    login,
+    searchMember,
+    allMember
 };

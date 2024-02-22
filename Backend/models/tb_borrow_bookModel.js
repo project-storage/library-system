@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER(),
             allowNull: false
         },
-        b_fine: {
+        br_fine: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: true
         }
