@@ -25,7 +25,9 @@ export default function BorrowBook_main() {
   const handleSearch = (e) => {
     e.preventDefault();
     const results = borrows.filter((borrow) =>
-      borrow.tb_book.b_name.toLowerCase().includes(searchTerm.toLowerCase())
+      borrow.tb_book.b_name.toLowerCase().includes(searchTerm.toLowerCase())||
+      borrow.tb_member.m_user.toLowerCase().includes(searchTerm.toLowerCase())
+
     );
     setSearchResults(results);
   };

@@ -29,19 +29,16 @@ const createBorrow = async (req, res) => {
 
 const searchBorrow = async (req, res) => {
     try {
-        const { b_id, m_user } = req.query;
+        const { id, b_id, m_user } = req.query;
 
         const whereClause = {};
-
-        if (b_id && m_user) {
-            // หาการยืมโดยใช้ทั้ง b_id และ m_user
+        if (id) {
+            whereClause.id = id;
+        }
+        if (b_id) {
             whereClause.b_id = b_id;
-            whereClause.m_user = m_user;
-        } else if (b_id) {
-            // หาการยืมโดยใช้เฉพาะ b_id
-            whereClause.b_id = b_id;
-        } else if (m_user) {
-            // หาการยืมโดยใช้เฉพาะ m_user
+        }
+        if (m_user) {
             whereClause.m_user = m_user;
         }
 
@@ -73,7 +70,7 @@ const allBorrow = async (req, res) => {
         return res.status(200).json({
             status_code: 200,
             message: "ดึงข้อมูลการยืมหนังสือทั้งหมดสำเร็จ",
-             allBorrows
+            allBorrows
         });
     } catch (error) {
         console.error(error);
